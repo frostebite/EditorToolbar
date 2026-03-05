@@ -1,17 +1,19 @@
 using UnityEditor;
 using UnityEngine;
 
-[ToolbarSectionAttribute("None")]
-public class NoneToolbar : IEditorToolbar
+namespace EditorToolbar
 {
-    public bool ShouldShow()
+    [ToolbarSectionAttribute("None")]
+    public class NoneToolbar : IEditorToolbar
     {
-        return true;
-    }
+        public bool ShouldShow()
+        {
+            return true;
+        }
 
-    public void OnGUI()
-    {
-        // Empty menu to show clear space
+        public void OnGUI()
+        {
+            // Empty menu to show clear space
+        }
     }
 }
-

@@ -6,6 +6,8 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+namespace EditorToolbar
+{
 /// <summary>
 /// Custom toolbar injector for Unity Editor toolbar.
 /// 
@@ -1649,4 +1651,4 @@ public static class CustomToolbarInjector
         Debug.Log($"[CustomToolbarInjector] Installation test: {(installed ? "SUCCESS" : "FAILED")}");
     }
 }
-
+}

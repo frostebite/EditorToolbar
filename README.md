@@ -1,6 +1,10 @@
 # EditorToolbar
 
+**Package:** `com.frostebite.editortoolbar`
+
 An extensible toolbar framework for the Unity Editor that provides attribute-based auto-discovery of toolbar sections across any assembly.
+
+All types are in the `EditorToolbar` namespace.
 
 ## Overview
 
@@ -8,15 +12,15 @@ EditorToolbar lets you add custom controls to the Unity Editor toolbar without m
 
 ## Features
 
-- **Attribute-based auto-discovery** — mark a class with `[ToolbarSection]` and it appears in the toolbar automatically; no manual registration required
-- **Cross-assembly discovery** — sections can live in any Editor assembly; the toolbar finds them all at startup
-- **Framework detection** — sections are grouped by framework (detected from asset paths, namespaces, or custom detectors); the mode selector shows `framework module - Section Name`
-- **Workspace providers** — inject left-side workspace UI (profile indicators, scene selectors, runtime status) via `[ToolbarWorkspaceProvider]` without touching the core system
-- **Multiple injection backends** — supports the Paps `UnityToolbarExtenderUIToolkit` plugin and a legacy custom injector as fallback; forward-compatible with the Unity 6.3+ MainToolbar API (disabled by default, enable with `ENABLE_MAIN_TOOLBAR_INJECTOR`)
-- **Conditional visibility** — sections implement `ShouldShow()` to appear or hide based on context
-- **Graceful error isolation** — a failing section shows an inline error label; other sections continue working
-- **Batch-mode safe** — toolbar initialization is skipped automatically when running in CI/headless mode
-- **Preference persistence** — selected section is saved per-user in `EditorPrefs`
+- **Attribute-based auto-discovery** -- mark a class with `[ToolbarSection]` and it appears in the toolbar automatically; no manual registration required
+- **Cross-assembly discovery** -- sections can live in any Editor assembly; the toolbar finds them all at startup
+- **Framework detection** -- sections are grouped by framework (detected from asset paths, namespaces, or custom detectors); the mode selector shows `framework module - Section Name`
+- **Workspace providers** -- inject left-side workspace UI (profile indicators, scene selectors, runtime status) via `[ToolbarWorkspaceProvider]` without touching the core system
+- **Multiple injection backends** -- supports the Paps `UnityToolbarExtenderUIToolkit` plugin and a legacy custom injector as fallback; forward-compatible with the Unity 6.3+ MainToolbar API (disabled by default, enable with `ENABLE_MAIN_TOOLBAR_INJECTOR`)
+- **Conditional visibility** -- sections implement `ShouldShow()` to appear or hide based on context
+- **Graceful error isolation** -- a failing section shows an inline error label; other sections continue working
+- **Batch-mode safe** -- toolbar initialization is skipped automatically when running in CI/headless mode
+- **Preference persistence** -- selected section is saved per-user in `EditorPrefs`
 
 ## Built-in Sections
 
@@ -34,6 +38,18 @@ EditorToolbar lets you add custom controls to the Unity Editor toolbar without m
 | Time | Time scale and frame rate controls |
 
 ## Installation
+
+### 1. Install the Paps dependency
+
+EditorToolbar requires the [Paps Unity Toolbar Extender UI Toolkit](https://github.com/paps-unity/unity-toolbar-extender-ui-toolkit) package. Install it first:
+
+1. Open **Window > Package Manager**
+2. Click the **+** button in the top-left corner
+3. Select **Add package from git URL...**
+4. Enter: `https://github.com/paps-unity/unity-toolbar-extender-ui-toolkit.git`
+5. Click **Add**
+
+### 2. Install EditorToolbar
 
 **Unity Package Manager (recommended)**
 
@@ -56,7 +72,7 @@ git submodule add https://github.com/frostebite/EditorToolbar.git Assets/_Engine
 ## Requirements
 
 - Unity 2021.3 or later
-- [Paps.UnityToolbarExtenderUIToolkit](https://github.com/PaulNonatomic/UnityToolbarExtender) — required for toolbar injection
+- [Paps.UnityToolbarExtenderUIToolkit](https://github.com/paps-unity/unity-toolbar-extender-ui-toolkit) -- required for toolbar injection
 
 ## Quick Start
 
@@ -65,6 +81,7 @@ Create a class in any Editor assembly, apply `[ToolbarSection]`, and implement `
 ```csharp
 using UnityEditor;
 using UnityEngine;
+using EditorToolbar;
 
 [ToolbarSection("My Tools")]
 public class MyToolbarSection : IEditorToolbar
@@ -83,7 +100,7 @@ public class MyToolbarSection : IEditorToolbar
 
 The section appears immediately after the next domain reload. No registration step is required.
 
-Your assembly definition must be Editor-only (`"includePlatforms": ["Editor"]`). No reference to the EditorToolbar assembly is required for discovery — `TypeCache` scans all loaded Editor assemblies.
+Your assembly definition must be Editor-only (`"includePlatforms": ["Editor"]`). No reference to the EditorToolbar assembly is required for discovery -- `TypeCache` scans all loaded Editor assemblies.
 
 ## Extensibility
 
@@ -92,6 +109,8 @@ Your assembly definition must be Editor-only (`"includePlatforms": ["Editor"]`).
 Inject UI into the left side of the toolbar (profile selector, scene picker, runtime status) by applying `[ToolbarWorkspaceProvider]` to a static class. The `Priority` property controls ordering when multiple providers are present (higher value = drawn first).
 
 ```csharp
+using EditorToolbar;
+
 [ToolbarWorkspaceProvider(Priority = 10)]
 public static class MyWorkspaceProvider
 {
@@ -123,6 +142,9 @@ public static class MyWorkspaceProvider
 The toolbar groups sections by framework using a chain of detectors. Register a custom detector to control how your sections are labelled and grouped. Detectors are tried in descending priority order; the first non-empty result wins.
 
 ```csharp
+using System;
+using EditorToolbar;
+
 [FrameworkDetector(Priority = 10)]
 public static class MyFrameworkDetector
 {

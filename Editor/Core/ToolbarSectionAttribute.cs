@@ -1,11 +1,14 @@
 using System;
 
-[AttributeUsage(AttributeTargets.Class)]
-public class ToolbarSectionAttribute : Attribute
+namespace EditorToolbar
 {
-    public string Name { get; }
-    public ToolbarSectionAttribute(string name)
+    [AttributeUsage(AttributeTargets.Class)]
+    public class ToolbarSectionAttribute : Attribute
     {
-        Name = name;
+        public string Name { get; }
+        public ToolbarSectionAttribute(string name)
+        {
+            Name = name;
+        }
     }
 }

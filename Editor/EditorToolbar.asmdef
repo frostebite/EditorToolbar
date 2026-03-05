@@ -1,6 +1,6 @@
 {
     "name": "EditorToolbar",
-    "rootNamespace": "",
+    "rootNamespace": "EditorToolbar",
     "references": [
         "Paps.UnityToolbarExtenderUIToolkit"
     ],

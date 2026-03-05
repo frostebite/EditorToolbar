@@ -1,0 +1,17 @@
+{
+  "name": "com.frostebite.editortoolbar",
+  "version": "1.0.0",
+  "displayName": "Editor Toolbar",
+  "description": "Extensible toolbar framework for the Unity Editor with attribute-based auto-discovery of toolbar sections.",
+  "unity": "2021.3",
+  "author": {
+    "name": "Frostebite",
+    "url": "https://github.com/frostebite"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "com.paps.unity-toolbar-extender-ui-toolkit": "1.0.0"
+  },
+  "keywords": ["toolbar", "editor", "extensible", "ui"],
+  "type": "tool"
+}
