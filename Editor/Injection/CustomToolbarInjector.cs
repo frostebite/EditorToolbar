@@ -32,6 +32,10 @@ public static class CustomToolbarInjector
     
     static CustomToolbarInjector()
     {
+        // Skip in batch mode (CI builds) — no toolbar to inject into
+        if (Application.isBatchMode)
+            return;
+
         // If the official MainToolbar API is available (Unity 6.3+), we prefer that path
         // via MainToolbarInjector and disable this legacy injector to avoid creating
         // elements that Unity moves into UnsupportedUserElements.
@@ -41,7 +45,7 @@ public static class CustomToolbarInjector
             Debug.Log("[CustomToolbarInjector] MainToolbar API detected - disabling legacy injector (main toolbar will use MainToolbarInjector).");
             return;
         }
-        
+
         EditorApplication.update -= OnUpdate;
         EditorApplication.update += OnUpdate;
         Debug.Log($"[CustomToolbarInjector] Initialized - LeftToolbarGUI handlers: {LeftToolbarGUI.Count}, RightToolbarGUI handlers: {RightToolbarGUI.Count}");
