@@ -1,10 +1,11 @@
 #if UNITY_EDITOR
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+#if HAS_PAPS_TOOLBAR_EXTENDER
 using Paps.UnityToolbarExtenderUIToolkit;
+#endif
 
 namespace EditorToolbar
 {
@@ -12,6 +13,7 @@ namespace EditorToolbar
     /// Integration with unity-toolbar-extender-ui-toolkit package for Unity 6.3+.
     /// This uses the package's MainToolbarElement attribute API to properly register custom UI elements
     /// without elements being moved to UnsupportedUserElements.
+    /// Requires com.paps.unity-toolbar-extender-ui-toolkit package to be installed.
     /// </summary>
     public static class ToolbarExtenderIntegration
     {
@@ -20,6 +22,7 @@ namespace EditorToolbar
         public static readonly List<Action> RightToolbarGUI = new List<Action>();
     }
 
+#if HAS_PAPS_TOOLBAR_EXTENDER
     /// <summary>
     /// Left-side toolbar element using Paps UnityToolbarExtender UIToolkit.
     /// Uses IMGUIContainer to render IMGUI-based toolbar UI.
@@ -109,5 +112,6 @@ namespace EditorToolbar
             name = "CustomToolbarRight";
         }
     }
+#endif
 }
 #endif
