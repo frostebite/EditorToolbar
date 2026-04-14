@@ -42,7 +42,7 @@ public static class CustomToolbarInjector
         var mainToolbarElementType = typeof(Editor).Assembly.GetType("UnityEditor.Toolbars.MainToolbarElement");
         if (mainToolbarElementType != null)
         {
-            Debug.Log("[CustomToolbarInjector] MainToolbar API detected - disabling legacy injector (main toolbar will use MainToolbarInjector).");
+            Debug.Log("[CustomToolbarInjector] MainToolbar API detected - disabling legacy injector (toolbar elements use Paps dual-attribute pattern via ToolbarExtenderIntegration).");
             return;
         }
 
