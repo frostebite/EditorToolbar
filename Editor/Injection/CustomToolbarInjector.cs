@@ -26,29 +26,40 @@ public static class CustomToolbarInjector
     
     private static bool _installed;
     private static ScriptableObject _currentToolbar;
-    
+
+    /// <summary>
+    /// When true, the main toolbar visual injection is skipped because the Paps
+    /// dual-attribute pattern (ToolbarExtenderIntegration) handles it.
+    /// The injector still initialises so that handler lists remain functional
+    /// and any dependent systems (e.g. CustomAppStatusBarInjector) can rely on
+    /// GenericToolbar being fully wired up.
+    /// </summary>
+    private static bool _mainToolbarHandledByPaps;
+
     public static readonly List<Action> LeftToolbarGUI = new List<Action>();
     public static readonly List<Action> RightToolbarGUI = new List<Action>();
-    
+
     static CustomToolbarInjector()
     {
         // Skip in batch mode (CI builds) — no toolbar to inject into
         if (Application.isBatchMode)
             return;
 
-        // If the official MainToolbar API is available (Unity 6.3+), we prefer that path
-        // via MainToolbarInjector and disable this legacy injector to avoid creating
-        // elements that Unity moves into UnsupportedUserElements.
+        // If the official MainToolbar API is available (Unity 6.3+), the Paps
+        // dual-attribute pattern in ToolbarExtenderIntegration handles the main
+        // toolbar. We still initialise this injector (handler lists, update loop)
+        // so that dependent systems work correctly — we just skip the visual
+        // injection in TryInstall().
         var mainToolbarElementType = typeof(Editor).Assembly.GetType("UnityEditor.Toolbars.MainToolbarElement");
         if (mainToolbarElementType != null)
         {
-            Debug.Log("[CustomToolbarInjector] MainToolbar API detected - disabling legacy injector (toolbar elements use Paps dual-attribute pattern via ToolbarExtenderIntegration).");
-            return;
+            _mainToolbarHandledByPaps = true;
+            Debug.Log("[CustomToolbarInjector] MainToolbar API detected - main toolbar visual injection disabled (Paps dual-attribute pattern via ToolbarExtenderIntegration). Handler lists remain active.");
         }
 
         EditorApplication.update -= OnUpdate;
         EditorApplication.update += OnUpdate;
-        Debug.Log($"[CustomToolbarInjector] Initialized - LeftToolbarGUI handlers: {LeftToolbarGUI.Count}, RightToolbarGUI handlers: {RightToolbarGUI.Count}");
+        Debug.Log($"[CustomToolbarInjector] Initialized - LeftToolbarGUI handlers: {LeftToolbarGUI.Count}, RightToolbarGUI handlers: {RightToolbarGUI.Count}, mainToolbarHandledByPaps: {_mainToolbarHandledByPaps}");
     }
     
     private static void OnUpdate()
@@ -91,9 +102,17 @@ public static class CustomToolbarInjector
     
     private static bool TryInstall()
     {
+        // When the Paps dual-attribute pattern handles the main toolbar,
+        // skip all visual injection. The handler lists are still populated
+        // by GenericToolbar regardless of this flag.
+        if (_mainToolbarHandledByPaps)
+        {
+            return true; // Report as installed so OnUpdate stops retrying
+        }
+
         var unityEditorAssembly = typeof(Editor).Assembly;
         bool installedAny = false;
-        
+
         // Strategy 1: Search from ContainerWindow root (like status bar injector)
         // This is where #overlay-toolbar__top is located in Unity 6
         var containerWindowType = unityEditorAssembly.GetType("UnityEditor.ContainerWindow");
