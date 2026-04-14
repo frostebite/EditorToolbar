@@ -21,25 +21,35 @@ namespace EditorToolbar
     /// <summary>
     /// Left-side toolbar element using the Paps UnityToolbarExtenderUIToolkit v3.0.0 dual-attribute pattern.
     /// Hosts IMGUI content from GenericToolbar (workspace UI, mode selector, runtime status).
+    ///
+    /// The Paps ID uses a dash separator ("EditorToolbar-Left") because UI Toolkit's Q() method
+    /// interprets "/" as a USS selector path separator, which would prevent Paps from finding
+    /// the Unity dummy placeholder. The Unity dummy attribute ID must match exactly.
     /// </summary>
-    [Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement(id: "EditorToolbar/Left", order: 0, useRecommendedStyles: false)]
+    [Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement(id: "EditorToolbar-Left", order: 0, useRecommendedStyles: false)]
     public class LeftToolbarElement : IMGUIContainer
     {
-        [UnityEditor.Toolbars.MainToolbarElement("EditorToolbar/Left", defaultDockPosition = MainToolbarDockPosition.Left, defaultDockIndex = 0)]
+        [UnityEditor.Toolbars.MainToolbarElement("EditorToolbar-Left", defaultDockPosition = MainToolbarDockPosition.Left, defaultDockIndex = 0)]
         public static UnityEditor.Toolbars.MainToolbarElement CreateDummy()
         {
             return null;
         }
 
-        public void InitializeElement()
+        public LeftToolbarElement()
         {
             name = "EditorToolbar-Left";
             style.flexGrow = 0;
             style.flexShrink = 0;
             style.minWidth = 350;
             style.minHeight = 22;
-
             onGUIHandler = DrawLeftToolbar;
+        }
+
+        public void InitializeElement()
+        {
+            // Re-apply in case Paps calls this after construction
+            onGUIHandler = DrawLeftToolbar;
+            Debug.Log($"[ToolbarExtenderIntegration] LeftToolbarElement initialized. Handler count: {ToolbarExtenderIntegration.LeftToolbarGUI.Count}");
         }
 
         private void DrawLeftToolbar()
@@ -63,25 +73,33 @@ namespace EditorToolbar
     /// <summary>
     /// Right-side toolbar element using the Paps UnityToolbarExtenderUIToolkit v3.0.0 dual-attribute pattern.
     /// Hosts IMGUI content from GenericToolbar (section-specific tools for the selected mode).
+    ///
+    /// See LeftToolbarElement for notes on dash-separated IDs.
     /// </summary>
-    [Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement(id: "EditorToolbar/Right", order: 1, useRecommendedStyles: false)]
+    [Paps.UnityToolbarExtenderUIToolkit.MainToolbarElement(id: "EditorToolbar-Right", order: 1, useRecommendedStyles: false)]
     public class RightToolbarElement : IMGUIContainer
     {
-        [UnityEditor.Toolbars.MainToolbarElement("EditorToolbar/Right", defaultDockPosition = MainToolbarDockPosition.Right, defaultDockIndex = 0)]
+        [UnityEditor.Toolbars.MainToolbarElement("EditorToolbar-Right", defaultDockPosition = MainToolbarDockPosition.Right, defaultDockIndex = 0)]
         public static UnityEditor.Toolbars.MainToolbarElement CreateDummy()
         {
             return null;
         }
 
-        public void InitializeElement()
+        public RightToolbarElement()
         {
             name = "EditorToolbar-Right";
             style.flexGrow = 0;
             style.flexShrink = 0;
             style.minWidth = 250;
             style.minHeight = 22;
-
             onGUIHandler = DrawRightToolbar;
+        }
+
+        public void InitializeElement()
+        {
+            // Re-apply in case Paps calls this after construction
+            onGUIHandler = DrawRightToolbar;
+            Debug.Log($"[ToolbarExtenderIntegration] RightToolbarElement initialized. Handler count: {ToolbarExtenderIntegration.RightToolbarGUI.Count}");
         }
 
         private void DrawRightToolbar()
