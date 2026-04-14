@@ -29,6 +29,7 @@ namespace EditorToolbar
         internal const string RightInjectedName = "EditorToolbar-Right-IMGUI";
     }
 
+#if HAS_PAPS_TOOLBAR_EXTENDER
     /// <summary>
     /// Left-side toolbar element using the Paps UnityToolbarExtenderUIToolkit v3.0.0 dual-attribute pattern.
     /// Hosts IMGUI content from GenericToolbar (workspace UI, mode selector, runtime status).
@@ -130,6 +131,7 @@ namespace EditorToolbar
             }
         }
     }
+#endif
 
     /// <summary>
     /// Fallback injector that ensures our IMGUI toolbar content is visible even when Paps

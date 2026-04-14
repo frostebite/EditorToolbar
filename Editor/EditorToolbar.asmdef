@@ -13,6 +13,12 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.paps.unity-toolbar-extender-ui-toolkit",
+            "expression": "",
+            "define": "HAS_PAPS_TOOLBAR_EXTENDER"
+        }
+    ],
     "noEngineReferences": false
 }
